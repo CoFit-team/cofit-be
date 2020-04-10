@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/index.js",
+    "startdb": "mongod --dbpath ~/data/db",
+    "test": "jest --watchAll",
+    "testc": "jest --coverage --watchAll=false"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +26,8 @@
   "devDependencies": {
     "jest": "^25.3.0",
     "mongodb-memory-server": "^6.5.2",
+    "nodemon": "^2.0.3",
     "supertest": "^4.0.2"
-  }
+  },
+  "jest": {"testEnvironment": "node"}
 }
