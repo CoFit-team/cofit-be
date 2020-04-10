@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const emotionSchema = new mongoose.Schema
-  ({
+const emotionSchema = new mongoose.Schema(
+  {
     emotionValue: {
       type: Number,
       required: true,
@@ -9,7 +10,8 @@ const emotionSchema = new mongoose.Schema
   },
   {
     timestamps: true,
-  });
+  }
+);
 
 const userSchema = new mongoose.Schema({
   userId: {
@@ -49,5 +51,14 @@ userSchema.path("password").validate(function (password) {
   return passwordRegex.test(password);
 }, "Password must be at least 8 characters long and contain 1 number, 1 uppercase and 1 lower case letters.");
 
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    const rounds = 10;
+    this.password = await bcrypt.hash(this.password, rounds);
+  }
+  next();
+});
+
 const UserModel = mongoose.model("User", userSchema);
+
 module.exports = UserModel;
