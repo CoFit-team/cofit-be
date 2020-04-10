@@ -1,22 +1,21 @@
 const mongoose = require("mongoose");
 
-const userIdSchema = {
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-    immutable: true,
-  },
-};
+const userIdSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+});
 
-const commentSchema =
-  ({
-    userId: userIdSchema,
+const commentSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: String,
+      required: true,
+    },
     message: String,
   },
   {
     timestamps: true,
-  });
+  }
+);
 
 const motivSchema = new mongoose.Schema(
   {
@@ -36,7 +35,7 @@ const motivSchema = new mongoose.Schema(
       min: 0,
       max: 9999,
     },
-    likesArray: [userIdSchema],
+    likesArray: [{ type: String, required: true }],
   },
   {
     timestamps: true,
@@ -44,11 +43,11 @@ const motivSchema = new mongoose.Schema(
 );
 
 motivSchema.index(
-  { "likesArray.id": 1 },
+  { "likesArray.userId": 1 },
   {
     unique: true,
     partialFilterExpression: {
-      "likesArray.id": { $exists: true },
+      "likesArray.userId": { $exists: true },
     },
   }
 );

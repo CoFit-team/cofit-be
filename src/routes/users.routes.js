@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const UserModel = require("../models/users.model");
-const { createJWTToken } = require("../middlewares/auth");
+const { protectRoute, createJWTToken } = require("../middlewares/auth");
 const wrapAsync = require("../utils/wrapAsync");
+
 
 const registerNewUser = async (req, res, next) => {
   const user = req.body;
@@ -27,7 +27,7 @@ const loginUser = async (req, res, next) => {
   const result = await bcrypt.compare(password, user.password);
 
   if (!result) {
-    throw new Error("Login failed");
+    throw new Error("Login failed.");
   }
   const token = createJWTToken(user.userId, user.username);
   const timeInMs = 24 * 60 * 60 * 1000;
@@ -36,11 +36,26 @@ const loginUser = async (req, res, next) => {
   res.status(200).send("You are now logged in!");
 };
 
+const patchUser = async (req, res, next) => {
+  const userId = req.params.id;
+  const newUserData = req.body;
+  const updatedUser = await UserModel.findOneAndUpdate({userId}, newUserData, {new:true})
+  res.status(200).send(updatedUser)
+}
+
+
 router.post("/newuser", wrapAsync(registerNewUser));
 router.post("/login", wrapAsync(loginUser));
 router.post("/logout", wrapAsync(logOutUser));
+router.patch("/:id", protectRoute, wrapAsync(patchUser));
+
 
 router.use((err, req, res, next) => {
+  
+  if (err.message === "Login failed.") {
+    err.statusCode = 401;
+  }
+
   if (err.name === "ValidationError") {
     err.statusCode = 400;
   }

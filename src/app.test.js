@@ -9,10 +9,11 @@ describe("app", () => {
       "1": "POST /users/login",
       "2": "POST /users/logout",
       "3": "GET /motivs",
-      "4": "POST /motivs",
-      "5": "PATCH /motivs?id=motivId/likes",
-      "6": "PATCH /motivs?id=motivId/comments",
-      "7": "PATCH /users/userId",
+      "4": "GET /motivs/:motivId",
+      "5": "POST /motivs",
+      "6": "PATCH /motivs/:motivId/likes",
+      "7": "PATCH /motivs/:motivId/comments",
+      "8": "PATCH /users/userId",
     });
   });
 });

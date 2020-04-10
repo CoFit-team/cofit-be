@@ -6,6 +6,8 @@ const emotionSchema = new mongoose.Schema(
     emotionValue: {
       type: Number,
       required: true,
+      min: 0,
+      max: 4,
     },
   },
   {
