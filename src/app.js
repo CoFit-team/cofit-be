@@ -9,16 +9,15 @@ const corsOptions = {
 };
 
 const userRouter = require("./routes/users.routes");
-const motivRouter = require("./routes/motiv.routes")
+const motivRouter = require("./routes/motiv.routes");
 
 app.use(express.json());
-// app.use(cors(corsOptions));
-// app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
 app.use("/users", userRouter);
-app.use("/motivs", motivRouter)
+app.use("/motivs", motivRouter);
 
 app.get("/", (req, res) => {
   res.json({
