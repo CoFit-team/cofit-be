@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 
-const userIdSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-});
+const userIdSchema = new mongoose.Schema(
+  {
+    userId: { type: String, required: true },
+  },
+  { _id: false }
+);
 
 const commentSchema = new mongoose.Schema(
   {
@@ -35,7 +38,7 @@ const motivSchema = new mongoose.Schema(
       max: 9999,
       default: 0,
     },
-    likesArray: [{ type: String, required: true }],
+    likesArray: [userIdSchema],
   },
   {
     timestamps: true,

@@ -27,7 +27,7 @@ const addLikesToMotivs = async (req, res, next) => {
   const motivId = req.params.motivId;
   const { likes, userId } = req.body;
   const update = {
-    $push: { likesArray: userId },
+    $push: { likesArray: { userId } },
     $set: { likes },
   };
   const selectedMotiv = await MotivModel.findOneAndUpdate({ motivId }, update, {
@@ -54,8 +54,11 @@ router.post("/", protectRoute, wrapAsync(postMotiv));
 router.get("/:motivId", wrapAsync(getMotiv));
 router.get("/", wrapAsync(getMotiv));
 router.patch("/:motivId/likes", wrapAsync(addLikesToMotivs));
-router.patch("/:motivId/comments", protectRoute, wrapAsync(addCommentsToMotivs));
-
+router.patch(
+  "/:motivId/comments",
+  protectRoute,
+  wrapAsync(addCommentsToMotivs)
+);
 
 router.use((err, req, res, next) => {
   if (err.name === "ValidationError") {
