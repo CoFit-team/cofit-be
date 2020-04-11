@@ -117,7 +117,7 @@ describe("user.routes.js", () => {
       expect(text).toEqual("You are now logged out!");
     });
 
-    it("PATCH /userId should allow the user to change username / password if user is logged in", async () => {
+    it("PATCH /:userId should allow the user to change username / password if user is logged in", async () => {
       const editFirstUser = {
         username: "kushellwood",
         password: "Abcd12345678",
@@ -132,7 +132,7 @@ describe("user.routes.js", () => {
         .expect(200);
       expect(actualUser).toMatchObject(editFirstUser);
     });
-    it("PATCH /userId should allow the user to change username / password if user is logged in", async () => {
+    it("PATCH /:userId should allow the user to change username / password if user is logged in", async () => {
       const editFirstUser = {
         username: "kushellwood",
         password: "Abcd12345678",
@@ -146,7 +146,7 @@ describe("user.routes.js", () => {
         .expect(200);
       expect(actualUser).toMatchObject(editFirstUser);
     });
-    it("PATCH /userId should not allow the user to change username / password if user is logged in", async () => {
+    it("PATCH /:userId should not allow the user to change username / password if user is logged in", async () => {
       const editFirstUser = {
         username: "kushellwood",
         password: "Abcd12345678",
@@ -158,7 +158,19 @@ describe("user.routes.js", () => {
         .expect(401);
       expect(err.error).toEqual("You are not authorized!");
     });
+
+    it("PATCH /:userId/emotions should add a emotionvalue to the user", async () => {
+      const userId = "80145006-0804-4316-a057-77a658cf14dc";
+      const newEmotion = {
+        emotionValue: 4,
+      };
+      let signedInAgent = request(app);
+      const { body } = await signedInAgent
+        .patch(`/users/${userId}/emotions`)
+        .set("Cookie", "token=valid-token")
+        .send(newEmotion)
+        .expect(200);
+      expect(body.emotion[0].emotionValue).toEqual(newEmotion.emotionValue);
+    });
   });
 });
-
-// "PATCH /users/userId",

@@ -13,7 +13,8 @@ describe("app", () => {
       "5": "POST /motivs",
       "6": "PATCH /motivs/:motivId/likes",
       "7": "PATCH /motivs/:motivId/comments",
-      "8": "PATCH /users/userId",
+      "8": "PATCH /motivs/:motivId/emotions",
+      "9": "PATCH /users/userId",
     });
   });
 });

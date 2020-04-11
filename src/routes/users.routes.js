@@ -7,7 +7,6 @@ const UserModel = require("../models/users.model");
 const { protectRoute, createJWTToken } = require("../middlewares/auth");
 const wrapAsync = require("../utils/wrapAsync");
 
-
 const registerNewUser = async (req, res, next) => {
   const user = req.body;
   const newUser = new UserModel(user);
@@ -37,21 +36,36 @@ const loginUser = async (req, res, next) => {
 };
 
 const patchUser = async (req, res, next) => {
-  const userId = req.params.id;
+  const userId = req.params.userId;
   const newUserData = req.body;
-  const updatedUser = await UserModel.findOneAndUpdate({userId}, newUserData, {new:true})
-  res.status(200).send(updatedUser)
-}
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { userId },
+    newUserData,
+    { new: true }
+  );
+  res.status(200).send(updatedUser);
+};
 
+const addEmotionsToUsers = async (req, res, next) => {
+  const userId = req.params.userId;
+  const { emotionValue } = req.body;
+  const update = {
+    $push: { emotion: { emotionValue } },
+  };
+  const updatedUser = await UserModel.findOneAndUpdate({ userId }, update, {
+    runValidators: true,
+    new: true,
+  });
+  res.status(200).send(updatedUser);
+};
 
 router.post("/newuser", wrapAsync(registerNewUser));
 router.post("/login", wrapAsync(loginUser));
 router.post("/logout", wrapAsync(logOutUser));
-router.patch("/:id", protectRoute, wrapAsync(patchUser));
-
+router.patch("/:userId", protectRoute, wrapAsync(patchUser));
+router.patch("/:userId/emotions", protectRoute, wrapAsync(addEmotionsToUsers));
 
 router.use((err, req, res, next) => {
-  
   if (err.message === "Login failed.") {
     err.statusCode = 401;
   }

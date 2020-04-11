@@ -56,6 +56,7 @@ router.get("/", wrapAsync(getMotiv));
 router.patch("/:motivId/likes", wrapAsync(addLikesToMotivs));
 router.patch("/:motivId/comments", protectRoute, wrapAsync(addCommentsToMotivs));
 
+
 router.use((err, req, res, next) => {
   if (err.name === "ValidationError") {
     err.statusCode = 400;
