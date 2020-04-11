@@ -172,5 +172,34 @@ describe("user.routes.js", () => {
         .expect(200);
       expect(body.emotion[0].emotionValue).toEqual(newEmotion.emotionValue);
     });
+
+    it("GET / should throw an error if no cookies are found", async () => {
+      const userId = "80145006-0804-4316-a057-77a658cf14dc";
+      const mockFirstUser = {
+        username: "kushellwood",
+        password: "Abcd12345",
+        email: "testing124@gmail.com",
+        userId: "80145006-0804-4316-a057-77a658cf14dc",
+      };
+      const { body } = await request(app).get(`/users`).expect(401);
+    });
+
+    it("GET / should return user details if cookie is found", async () => {
+      const userId = "80145006-0804-4316-a057-77a658cf14dc";
+      const mockFirstUser = {
+        username: "kushellwood",
+        email: "testing124@gmail.com",
+        userId: "80145006-0804-4316-a057-77a658cf14dc",
+      };
+      jwt.verify.mockReturnValueOnce({
+        userId: mockFirstUser.userId,
+        username: mockFirstUser.username,
+      });
+      const { body } = await request(app)
+        .get(`/users`)
+        .set("Cookie", "token=valid-token")
+        .expect(200);
+      expect(body).toMatchObject(mockFirstUser)
+    });
   });
 });

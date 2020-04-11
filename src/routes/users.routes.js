@@ -7,6 +7,10 @@ const UserModel = require("../models/users.model");
 const { protectRoute, createJWTToken } = require("../middlewares/auth");
 const wrapAsync = require("../utils/wrapAsync");
 
+const getUser = async(req, res, next) => {
+  res.status(200).send(await UserModel.findOne({userId:req.user.userId}))
+}
+
 const registerNewUser = async (req, res, next) => {
   const user = req.body;
   const newUser = new UserModel(user);
@@ -59,6 +63,7 @@ const addEmotionsToUsers = async (req, res, next) => {
   res.status(200).send(updatedUser);
 };
 
+router.get("/", protectRoute, wrapAsync(getUser))
 router.post("/newuser", wrapAsync(registerNewUser));
 router.post("/login", wrapAsync(loginUser));
 router.post("/logout", wrapAsync(logOutUser));
