@@ -26,7 +26,6 @@ const motivSchema = new mongoose.Schema(
     },
     imageURL: {
       type: String,
-      unique: true,
     },
     text: String,
     commentArray: [commentSchema],
