@@ -77,23 +77,6 @@ describe("motiv.routes.js", () => {
       .expect(201);
     expect(body).toMatchObject(mockMotiv);
   });
-  it("POST /motivs should return 400 when the imageURL is not unique", async () => {
-    const mockMotiv = {
-      imageURL:
-        "https://cofitphotos.s3-ap-southeast-1.amazonaws.com/User1_10042020.jpeg",
-      text: "Circuit Breaker Day 1",
-      likes: 20,
-    };
-    let signedInAgent = request(app);
-    const { body: err } = await signedInAgent
-      .post("/motivs")
-      .set("Cookie", "token=valid-token")
-      .send(mockMotiv)
-      .expect(422);
-    expect(err.error).toEqual(
-      `E11000 duplicate key error dup key: { : "https://cofitphotos.s3-ap-southeast-1.amazonaws.com/User1_10042020.jpeg" }`
-    );
-  });
   it("GET /motivs/:motivId should return one motiv when one of them is found", async () => {
     const mockFirstMotiv = {
       motivId: "42db221d-0ea0-405a-a5ab-a60ff8cc4c66",

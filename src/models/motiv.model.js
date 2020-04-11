@@ -33,6 +33,7 @@ const motivSchema = new mongoose.Schema(
       type: Number,
       min: 0,
       max: 9999,
+      default: 0,
     },
     likesArray: [{ type: String, required: true }],
   },
